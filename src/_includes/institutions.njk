@@ -1,0 +1,12 @@
+---
+layout: base.njk
+---
+<div class="flex-col">
+  <h2>Institutions with the highest publication counts for {{ year }}</h2>
+  <ol>
+    {%- for key, val in topInstitutions[year] |sortBy('count') | limit(100) -%}
+    {# <li><a href="/institution/{{ key | slugify }}">{{ val.display }}</a> ({{ val.count }})</li> #}
+    <li>{{ val.display }} ({{ val.count }})</li>
+    {%- endfor -%}
+  </ol>
+</div>

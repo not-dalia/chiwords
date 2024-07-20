@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+</head>
+
+<body>
+  <header>
+    <h1><a href="/">{{ title }}</a></h1>
+    <select onchange="selectYear(this)">
+      {%- for y in years | reverse %}
+      <option val="{{ y }}"
+      {% if y == year %} selected{% endif %}
+      >{{y}}</option>
+      {% endfor -%}
+    </select>
+  </header>
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <script>
+    function selectYear (select) {
+      window.location.href = '{{yearSelectionHref}}'.replace('%s', select
+        .options[select.selectedIndex]
+        .value);
+    }
+  </script>
+</body>
+
+</html>

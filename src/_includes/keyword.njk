@@ -1,0 +1,60 @@
+---
+layout: base.njk
+---
+<style>
+  #rateperyear {
+    width: 100%;
+    max-height: 400px;
+  }
+</style>
+
+<div class="flex-col">
+  <h2>Keyword: {{ topKeywords[keyword].display }}</h2>
+  <p>Total count: {{ topKeywords[keyword].count }}</p>
+
+  <div class="flex-row">
+    <canvas id="rateperyear"></canvas>
+  </div>
+
+  <div>
+    {%- set yearCountMap = topKeywords[keyword].years | map(['year', 'count']) -%}
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const years = [{{ yearCountMap.year }}].map(y => parseInt(y))
+    const counts = [{{ yearCountMap.count }}]
+    let countYearData = years.map((year, index) => {
+      return {
+        year: year,
+        count: counts[index]
+      }
+    });
+    const minYear = 1981;
+    const maxYear = (new Date()).getFullYear();
+    for (let i = minYear; i <= maxYear; i++) {
+      if (!countYearData.find(y => y.year === i)) {
+        countYearData.push({
+          year: i,
+          count: 0
+        });
+      }
+    }
+    countYearData = countYearData.sort((a, b) => a.year - b.year);
+    const ctx = document.getElementById('rateperyear').getContext('2d');
+    // const labels = Utils.years({{ topKeywords[keyword].years }});
+    const config = {
+      type: 'bar',
+      data: {
+        labels: countYearData.map(y => y.year),
+        datasets: [
+          {
+            label: 'Occurance rate across years',
+            data: countYearData.map(y => y.count),
+          }
+        ]
+      }
+    };
+    const ratePerYearChart = new Chart(ctx, config);
+  </script>
+
+</div>

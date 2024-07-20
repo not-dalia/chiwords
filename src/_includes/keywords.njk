@@ -1,0 +1,15 @@
+---
+layout: base.njk
+---
+<div class="flex-col">
+  <h2>Top 100 keywords for {{ year }}</h2>
+  <ol>
+    {%- set n = 0 -%}
+    {%- for key, val in keywordsYearMap[year] | sortBy('percentage') | limit(103) -%}
+    {%- if n < 100 and key != "360" and key != "1" -%}
+    <li><a href="/keyword/{{ key | slugify }}">{{ val.tags[0] }}</a> ({{ val.percentage | toFixed }}%)</li>
+    {%- set n = n + 1 -%}
+    {%- endif -%}
+    {%- endfor -%}
+  </ol>
+</div>

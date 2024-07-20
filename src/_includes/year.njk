@@ -1,0 +1,121 @@
+---
+layout: base.njk
+---
+<style>
+  #wordcloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  #wordcloud>a {
+    text-decoration: none;
+    color: black;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 100px;
+  }
+
+  #wordcloud>a>span {
+    /* margin: 5px; */
+
+  }
+
+  #wordcloud>a:hover {
+    background-color: #f0f0f0;
+  }
+
+  .flex-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+</style>
+
+<div>
+  This is {{ year }}
+</div>
+
+<div id="wordcloud">
+  {%- for key, val in keywordsYearMap[year] | sortBy('percentage') | limit(20) | randomizeOrder -%}
+  {# {% if loop.index0 < 20 %} #}
+    <a href="/keyword/{{ key | slugify }}"><span style="font-size: {{ (val.percentage * 7)| minMax(12, 55)}}px" title="{{val.percentage | toFixed}}%">{{ val.tags[0] }}
+      {% if val.growthRate > 0 %}
+        <span style="color: green; font-size: {{ (val.percentage * 5) | minMax(10, 40)}}px;">▲</span>
+      {% else %}
+        <span style="color: red; font-size: {{ (val.percentage * 5) | minMax(10, 40)}}px;">▼</span>
+      {% endif %}
+    </span></a>
+  {# {% endif%} #}
+  {% endfor -%}
+</div>
+
+<div class="flex-row">
+  <div class="flex-col">
+    <h2>Top 10</h2>
+    <ul>
+      {%- set n = 0 -%}
+      {%- for key, val in keywordsYearMap[year] | sortBy('percentage') | limit(20) -%}
+      {% if n < 10 and key != "360" and key != "1" %}
+      <li>{{ val.tags[0] }} ({{ val.percentage | toFixed }}%)</li>
+      {%- set n = n + 1 -%}
+      {% endif %}
+      {%- endfor -%}
+      {%- if keywordsYearMap[year] | length > 10 -%}
+      <li><a href="/year/{{ year }}/keywords">More...</a></li>
+      {%- endif -%}
+    </ul>
+  </div>
+
+  <div class="flex-col">
+    <h2>Rising</h2>
+    <ul>
+      {%- set n = 0 -%}
+      {%- for key, val in keywordsYearMap[year] | sortBy('growthRate') | limit(20) -%}
+      {%- if val.growthRate > 0 and n < 10 -%}
+      <li>{{ val.tags[0] }} ({{ val.growthRate | toFixed }}%)</li>
+      {%- set n = n + 1 -%}
+      {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+
+  <div class="flex-col">
+    <h2>Falling</h2>
+    <ul>
+      {%- set n = 0 -%}
+      {%- for key, val in keywordsYearMap[year] | sortBy('growthRate', true) | limit(20) -%}
+      {%- if val.growthRate < 0 and n < 10 -%}
+      <li>{{ val.tags[0] }} ({{ val.growthRate | toFixed }}%)</li>
+      {%- set n = n + 1 -%}
+      {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+<div class="flex-row">
+  <div class="flex-col">
+    <h2>Top 10 Institutions for {{ year }}</h2>
+    <ul>
+      {%- for key, val in topInstitutions[year] | sortBy('count') | limit(10) -%}
+      <li>{{ val.display | safe }} ({{ val.count }})</li>
+      {%- endfor -%}
+      {%- if topInstitutions[year] | length > 10 -%}
+      <li><a href="/year/{{ year }}/institutions">More...</a></li>
+      {%- endif -%}
+    </ul>
+  </div>
+
+  <div class="flex-col">
+    <h2>Top published authors for {{ year }}</h2>
+    <ul>
+      {%- for key, val in topPeople[year] | sortBy('count') | limit(10) -%}
+      <li>{{ val.display | safe }} ({{ val.count }})</li>
+      {%- endfor -%}
+    </ul>
+  </div>
+
+</div>

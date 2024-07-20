@@ -1,0 +1,19 @@
+---
+layout: base.njk
+---
+<style>
+  #rateperyear {
+    width: 100%;
+    max-height: 400px;
+  }
+</style>
+
+<div class="flex-col">
+  {%- set selectedInstitution = topInstitutionsOverall[institution] -%}
+  <h2>Institution: {{ selectedInstitution.display }}</h2>
+  <p>Total publications: {{ selectedInstitution.count }}</p>
+
+  <div class="flex-row">
+    <canvas id="rateperyear"></canvas>
+  </div>
+</div>
