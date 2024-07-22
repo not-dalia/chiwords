@@ -5,7 +5,7 @@ pagination:
   alias: keyword
 permalink: "keyword/{{ keyword | slugify }}/"
 layout: keyword.njk
-title: The CHI Review
+title: CHI Words
 yearSelectionHref: "/year/%s/"
 ---
 

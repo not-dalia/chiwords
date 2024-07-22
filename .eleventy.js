@@ -1,6 +1,6 @@
 module.exports = function (eleventyConfig) {
   let n = 1
-
+  eleventyConfig.addPassthroughCopy("styles.css");
   eleventyConfig.addNunjucksFilter(
     "sortBy",
     function (arrOrObj, attribute, reverse = false) {
@@ -48,6 +48,42 @@ module.exports = function (eleventyConfig) {
     } else {
       return Object.keys(arrOrObj)
         .sort(() => Math.random() - 0.5)
+        .reduce((acc, key) => {
+          acc[key] = arrOrObj[key];
+          return acc;
+        }, {});
+    }
+  });
+
+  eleventyConfig.addNunjucksFilter("SortToMiddlePeak", function (arrOrObj) {
+    // sort so that the middle value is the highest and the values decrease as you move away from the middle
+    // sort first ascending then take every other value and reverse it
+    if (Array.isArray(arrOrObj)) {
+      const sorted = arrOrObj.sort((a, b) => b - a);
+      const firstHalf = sorted.filter((_, i) => i % 2 === 0);
+      const secondHalf = sorted.filter((_, i) => i % 2 === 1);
+      const reversed = secondHalf.reverse();
+      return [...reversed, ...firstHalf];
+    } else {
+      const keys = Object.keys(arrOrObj);
+      const sorted = keys.sort((a, b) => arrOrObj[b] - arrOrObj[a]);
+      const firstHalf = sorted.filter((_, i) => i % 2 === 0);
+      const secondHalf = sorted.filter((_, i) => i % 2 === 1);
+      const reversed = secondHalf.reverse();
+      const result = {};
+      [...reversed, ...firstHalf].forEach((key, i) => {
+        result[key] = arrOrObj[key];
+      });
+      return result;
+    }
+  });
+
+  eleventyConfig.addNunjucksFilter("SortAlphabetically", function (arrOrObj) {
+    if (Array.isArray(arrOrObj)) {
+      return arrOrObj.sort();
+    } else {
+      return Object.keys(arrOrObj)
+        .sort()
         .reduce((acc, key) => {
           acc[key] = arrOrObj[key];
           return acc;

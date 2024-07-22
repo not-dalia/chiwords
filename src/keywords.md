@@ -5,7 +5,7 @@ pagination:
   alias: year
 permalink: "year/{{ year }}/keywords/"
 layout: keywords.njk
-title: The CHI Review
+title: CHI Words
 yearSelectionHref: "/year/%s/keywords/"
 ---
 
