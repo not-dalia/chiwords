@@ -5,6 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ title }}</title>
+  <script>
+    var relevantPageMode = localStorage.getItem("relevantPageMode");
+    if (relevantPageMode) {
+      // set html background color
+      document.documentElement.style.background = relevantPageMode === "day" ? "#fff" : "#222";
+    }
+  </script>
   <style>
     :root {
       --background-color: #fff;
@@ -60,13 +67,23 @@
     body {
       padding: 2rem;
       min-height: 100%;
+      font-family: 'Afacad', sans-serif;
+      font-size: 14pt;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    body.day {
       background: #fff;
       background: var(--background-color);
       color: #000;
       color: var(--text-color);
-      font-family: 'Afacad', sans-serif;
-      font-size: 14pt;
-      transition: color 0.2s, background 0.2s;
+    }
+
+    body.night {
+      background: #222;
+      background: var(--background-color);
+      color: #fff;
+      color: var(--text-color);
     }
 
     * {
@@ -219,13 +236,6 @@
       min-width: 280px;
     }
 
-    #rateperyear {
-      background: white;
-      background: var(--background-color);
-      transition: color 0.2s, background 0.2s;
-    }
-
-
 
     #night-mode-toggle input[type='checkbox'] {
       opacity: 0;
@@ -342,7 +352,6 @@
   var nightModeToggle = document.querySelector("#night-mode-toggle-input");
   var relevantApp = document.querySelector("body");
   if (!relevantApp.classList.contains(relevantPageMode)) {
-    console.log('checking darkmode settings')
     relevantApp.classList.add(relevantPageMode);
     // disable transition for toggle, toggleCircle and app
     document.querySelector("#night-mode-toggle label").style.transition = "none";
@@ -357,7 +366,6 @@
       document.querySelector("#night-mode-toggle .icon").style.transition = " color 0.2s linear;";
       relevantApp.style.transition = "color 0.2s, background 0.2s";
     }, 100);
-    console.log(nightModeToggle.checked);
     updateChartColors();
   }
   function toggleRelevantDarkMode () {
@@ -395,8 +403,6 @@
       chart.options.scales.y.title.color = textColor;
 
       chart.update();
-      console.log('updated chart')
-      console.log(chart)
     });
   }
   // *************************************************
