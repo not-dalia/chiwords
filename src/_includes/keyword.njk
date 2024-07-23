@@ -44,17 +44,67 @@ layout: base_no_year.njk
     // const labels = Utils.years({{ topKeywords[keyword].years }});
     const config = {
       type: 'bar',
+      options: {
+        animation: {
+          duration: 300
+        },
+        scales: {
+          x: {
+            ticks: {
+              font: {
+                family: 'Afacad',
+                size: 14
+              }
+            }
+          },
+          y: {
+            ticks: {
+              font: {
+                family: 'Afacad',
+                size: 14
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              useBorderRadius: true,
+              borderRadius: 3,
+              font: {
+                family: 'Afacad',
+                size: 16
+              }
+            }
+          },
+          tooltip: {
+            titleFont: {
+              family: 'Afacad',
+              size: 14
+            },
+            bodyFont: {
+              family: 'Afacad',
+              size: 14
+            }
+          }
+        }
+      },
       data: {
         labels: countYearData.map(y => y.year),
         datasets: [
           {
-            label: 'Occurance rate across years',
+            label: 'Occurance rate',
             data: countYearData.map(y => y.count),
+            backgroundColor: 'rgba(21, 119, 126, 0.5)',
+            borderColor: 'rgba(21, 119, 126, 0.8)',
+            borderWidth: 0,
+            borderRadius: 3
           }
         ]
       }
     };
     const ratePerYearChart = new Chart(ctx, config);
+    registeredCharts.push(ratePerYearChart);
   </script>
 
 </div>
